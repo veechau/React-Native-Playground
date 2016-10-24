@@ -15,23 +15,14 @@ import {
   View
 } from 'react-native';
 
-let styles = ReactNative.StyleSheet.create({
-  text: {
-    color: 'black',
-    backgroundColor: 'white',
-    fontSize: 30,
-    margin: 80
-  },
+import SearchPage from './searchpage.js';
+
+
+const styles = ReactNative.StyleSheet.create({
   container: {
     flex: 1
   }
 });
-
-export class HelloWorld extends React.Component {
-  render() {
-    return React.createElement(ReactNative.Text, {style: styles.text}, "Hello World (again)!");
-  }
-}
 
 export class PropertyFinderApp extends React.Component {
   render() {
@@ -40,7 +31,7 @@ export class PropertyFinderApp extends React.Component {
         style={styles.container}
         initialRoute={{
           title: 'Property Finder',
-          component: HelloWorld,
+          component: SearchPage
         }}/>
     );
   }
