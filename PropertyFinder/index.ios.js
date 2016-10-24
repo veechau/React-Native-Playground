@@ -21,12 +21,28 @@ let styles = ReactNative.StyleSheet.create({
     backgroundColor: 'white',
     fontSize: 30,
     margin: 80
+  },
+  container: {
+    flex: 1
   }
 });
 
+export class HelloWorld extends React.Component {
+  render() {
+    return React.createElement(ReactNative.Text, {style: styles.text}, "Hello World (again)!");
+  }
+}
+
 export class PropertyFinderApp extends React.Component {
   render() {
-    return React.createElement(ReactNative.Text, {style: styles.text}, "Hello World!");
+    return (
+      <ReactNative.NavigatorIOS
+        style={styles.container}
+        initialRoute={{
+          title: 'Property Finder',
+          component: HelloWorld,
+        }}/>
+    );
   }
 }
 
