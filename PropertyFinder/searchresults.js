@@ -10,7 +10,9 @@ import {
   Text
 } from 'react-native';
 
-var styles = StyleSheet.create({
+const PropertyView = require('./propertyview.js');
+
+let styles = StyleSheet.create({
   thumb: {
     width: 80,
     height: 80,
@@ -42,7 +44,7 @@ class SearchResults extends Component {
 
   constructor(props) {
     super(props);
-    var dataSource = new ListView.DataSource(
+    let dataSource = new ListView.DataSource(
       {rowHasChanged: (r1, r2) => r1.lister_url !== r2.lister_url});
     this.state = {
       dataSource: dataSource.cloneWithRows(this.props.listings)
@@ -50,11 +52,16 @@ class SearchResults extends Component {
   }
 
   rowPressed(listerURL) {
-    var property = this.props.listings.filter(prop => prop.lister_url === listerURL)[0];
+    let property = this.props.listings.filter(prop => prop.lister_url === listerURL)[0];
+    this.props.navigator.push({
+      title: "Property",
+      component: PropertyView,
+      passProps: {property: property}
+    })
   }
 
   renderRow(rowData, sectionID, rowID) {
-    var price = rowData.price_formatted.split(' ')[0];
+    let price = rowData.price_formatted.split(' ')[0];
 
     return (
       <TouchableHighlight onPress={() => this.rowPressed(rowData.lister_url)}
