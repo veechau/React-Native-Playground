@@ -129,6 +129,20 @@ class SearchPage extends Component {
       this.setState({ message: "location not recognized; please try again."});
     }
   }
+  onLocationPressed(){
+    navigator.geolocation.getCurrentPosition(
+      location => {
+        let search = location.coords.latitude + "," + location.coords.longitude;
+        this.setState({ searchString: search })
+        let query = urlForQueryAndPage('centre_point', search, 1);
+        this._executeQuery(query);
+      },
+      error => {
+        this.setState({
+          message: "There was a problem with obtaining your location: " + error
+        });
+      });
+  }
   render() {
     console.log("SearchPage.render");
     let spinner = this.state.isLoading ? ( <ActivityIndicator size="large" /> ) : ( <View/>);
@@ -154,7 +168,9 @@ class SearchPage extends Component {
               onPress={this.onSearchPressed.bind(this)}>Go</Text>
           </TouchableHighlight>
         </View>
-        <TouchableHighlight style={styles.button}
+        <TouchableHighlight
+          style={styles.button}
+          onPress={this.onLocationPressed.bind(this)}
           underlayColor={"#99d9f4"}>
           <Text style={styles.buttonText}>Location</Text>
         </TouchableHighlight>

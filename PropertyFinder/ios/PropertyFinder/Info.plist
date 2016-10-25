@@ -37,21 +37,20 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>PropertyFinder would like to use your location to find nearby properties</string>
 	<key>NSAppTransportSecurity</key>
-	<!--See http://ste.vn/2015/06/10/configuring-app-transport-security-ios-9-osx-10-11/ -->
 	<dict>
 		<key>NSExceptionDomains</key>
 		<dict>
 			<key>api.nestoria.co.uk</key>
 			<dict>
-			  <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
-			  <true/>
+				<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
 			</dict>
 			<key>imgs.nestimg.com</key>
 			<dict>
-			  <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
-			  <true/>
+				<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
 			</dict>
 			<key>localhost</key>
 			<dict>
