@@ -11,6 +11,7 @@ import {
   Image
 } from 'react-native';
 
+const SearchResults = require('./searchresults.js');
 let housePic = require("./resources/house.png");
 
 const styles = StyleSheet.create({
@@ -82,6 +83,7 @@ function urlForQueryAndPage(key, value, pageNumber) {
 };
 
 class SearchPage extends Component {
+
   constructor(props){
     super(props);
     this.state = {
@@ -91,11 +93,13 @@ class SearchPage extends Component {
         // check if query is in process
     };
   }
+
   onSearchTextChanged(e){
     console.log("onSearchTextChanged");
     this.setState({ searchString: e.nativeEvent.text });
     console.log(this.state.searchString);
   }
+
   _executeQuery(query) {
     console.log(query);
     this.setState({ isLoading: true });
@@ -107,14 +111,20 @@ class SearchPage extends Component {
         message: 'Something bad happened ' + error
       }));
   }
+
   onSearchPressed(){
     let query = urlForQueryAndPage("place_name", this.state.searchString, 1);
     this._executeQuery(query);
   }
+
   _handleResponse(response){
     this.setState({ isLoading: false, message: ""});
     if (response.application_response_code.substr(0,1) === "1") {
-      console.log("Properties Found: " + response.listings.length);
+      this.props.navigator.push({
+        title: "Results",
+        component: SearchResults,
+        passProps: {listings: response.listings}
+      });
     } else {
       this.setState({ message: "location not recognized; please try again."});
     }
