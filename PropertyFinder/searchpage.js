@@ -64,9 +64,64 @@ const styles = StyleSheet.create({
   }
 });
 
+function urlForQueryAndPage(key, value, pageNumber) {
+  let data = {
+    country: 'uk',
+    pretty: '1',
+    encoding: 'json',
+    listing_type: 'buy',
+    action: 'search_listings',
+    page: pageNumber
+  };
+  data[key] = value;
+
+  let queryString = Object.keys(data).map( key => key + "=" + encodeURIComponent(data[key]))
+    .join("&");
+
+    return 'http://api.nestoria.co.uk/api?' + queryString;
+};
 
 class SearchPage extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      searchString: 'london',
+      isLoading: false,
+      message: ""
+        // check if query is in process
+    };
+  }
+  onSearchTextChanged(e){
+    console.log("onSearchTextChanged");
+    this.setState({ searchString: e.nativeEvent.text });
+    console.log(this.state.searchString);
+  }
+  _executeQuery(query) {
+    console.log(query);
+    this.setState({ isLoading: true });
+    fetch(query)
+      .then(response => response.json())
+      .then(json => this._handleResponse(json.response))
+      .catch(error => this.setState({
+        isLoading: false,
+        message: 'Something bad happened ' + error
+      }));
+  }
+  onSearchPressed(){
+    let query = urlForQueryAndPage("place_name", this.state.searchString, 1);
+    this._executeQuery(query);
+  }
+  _handleResponse(response){
+    this.setState({ isLoading: false, message: ""});
+    if (response.application_response_code.substr(0,1) === "1") {
+      console.log("Properties Found: " + response.listings.length);
+    } else {
+      this.setState({ message: "location not recognized; please try again."});
+    }
+  }
   render() {
+    console.log("SearchPage.render");
+    let spinner = this.state.isLoading ? ( <ActivityIndicator size="large" /> ) : ( <View/>);
     return (
       <View style={styles.container}>
         <Text style={styles.description}>
@@ -79,10 +134,14 @@ class SearchPage extends Component {
         <View style={styles.flowRight}>
           <TextInput
             style={styles.searchInput}
+            value={this.state.searchString}
+            onChange={this.onSearchTextChanged.bind(this)}
             placeholder="Search via name or postcode"/>
           <TouchableHighlight style={styles.button}
             underlayColor="#99d9f4">
-            <Text style={styles.buttonText}>Go</Text>
+            <Text
+              style={styles.buttonText}
+              onPress={this.onSearchPressed.bind(this)}>Go</Text>
           </TouchableHighlight>
         </View>
         <TouchableHighlight style={styles.button}
@@ -90,6 +149,8 @@ class SearchPage extends Component {
           <Text style={styles.buttonText}>Location</Text>
         </TouchableHighlight>
         <Image source={housePic} style={styles.image}/>
+        {spinner}
+        <Text style={styles.description}>{this.state.message}</Text>
       </View>
     );
   }
